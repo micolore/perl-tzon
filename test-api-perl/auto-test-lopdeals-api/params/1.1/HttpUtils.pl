@@ -96,23 +96,39 @@ sub http_post_form{
        print "message:    " . $result->{"message"} . "\n";
        return $result->{"data"};
 }
+sub PrintHash{
+   my (%hash) = @_;
+ 
+   foreach my $key ( keys %hash ){
+      my $value = $hash{$key};
+      print " $key : $value\n";
+   }
+}
 
 my $common_domain_name = "http://192.168.1.207:11521/lopdeals-api/";
 
+my $params_mobile = "1991111121";
+my $params_pwd    = "123456";
 #注册接口参数
 my $register_params_json_str = JSON->new->space_after->encode({
 	       "url"=>$common_domain_name . "user/register",
-               "form_data"=>"mobile=1991111120&password=123456&enabled_sms=1&sms_code=123456"
+               "form_data"=>"mobile=" . $params_mobile . "&password=" . $params_pwd . "&enabled_sms=1&sms_code=123456"
 	});
 #请求验证码接口参数
 $send_sms_code_url =$common_domain_name . "common/send_sms_code";
 my $send_sms_code_json_str = JSON->new->space_after->encode({
 	       "url"=> $send_sms_code_url,
-	       "form_data"=>"mobile=1991111120&type=1"
+	       "form_data"=>"mobile=" . $params_mobile . "&type=1"
 	});
-
+#手机号登陆接口参数
+$mobile_login_json_str = JSON->new->space_after->encode({
+	        "url"=>$common_domain_name . "user/mobile_login",
+		"form_data"=>"mobile=". $params_mobile . "&password=" . $params_pwd
+	});
 # 注册接口请求
 my $result = http_post_form($send_sms_code_json_str);
+PrintHash($result);
 print "http-result-data:" . $result . "\n";
 http_post_form($register_params_json_str);
-
+my $mobile_login_result = http_post_form($mobile_login_json_str);
+PrintHash($mobile_login_result);

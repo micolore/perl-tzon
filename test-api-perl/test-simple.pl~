@@ -11,5 +11,5 @@ ok($hellostr eq 'Hello Guys!','hello() works');
 ok($byestr eq 'GoodsBye Guys!','bye() works');
 my $helloworld = Hello::hello();
 ok($helloworld eq 'Hello world','should be hello ,world by default');
-my $my_goods = 124;
+$my_goods = 123;
 print "hello_goods" . $my_goods . "\n";
